@@ -1,2 +1,19 @@
 # my-idea-1010
-複数銘柄の値動きと今日の予想を↑↓で一目で見て、直近24時間のファンダもわかるアプリ
+
+
+
+- ▶ **Try it:** https://komarinlove.github.io/my-idea-1010/
+
+## About
+
+See the app and [IDEA.md](IDEA.md) (the idea log, in Japanese).
+
+## How it was made
+
+Built by shaping the idea together with AI (Claude) and publishing the AI-written code.
+The full conversation is in [IDEA.md](IDEA.md) (Japanese).
+
+## Files
+
+- `index.html` — the app (a single self-contained file)
+- `IDEA.md` — the idea log

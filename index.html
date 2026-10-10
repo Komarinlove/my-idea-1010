@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+<head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; media-src data: blob:; base-uri 'none'; form-action 'none'">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Market Pulse</title>
+<style>
+:root{--bg:#0b1220;--card:#131c2f;--card2:#18233b;--line:#25335a;--text:#e8eefc;--muted:#9aaacb;--accent:#5eead4;--up:#2fd08a;--down:#ff5d6c;--up-bg:rgba(47,208,138,.14);--down-bg:rgba(255,93,108,.14)}
+body[data-color=jp]{--up:#ff6b78;--down:#55a8ff;--up-bg:rgba(255,107,120,.15);--down-bg:rgba(85,168,255,.15)}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:radial-gradient(900px 420px at 80% -10%,#16264a 0,transparent 60%),var(--bg);color:var(--text);font-family:system-ui,"Hiragino Sans","Noto Sans JP",sans-serif;line-height:1.5;min-height:100vh}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:8px}
+.wrap{max-width:1080px;margin:0 auto;padding:12px 14px 40px}
+header{display:flex;align-items:center;gap:10px;justify-content:space-between;padding:6px 0 12px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand h1{font-size:18px;margin:0;letter-spacing:.2px;white-space:nowrap}
+.brand small{display:block;color:var(--muted);font-size:11px;line-height:1.2}
+.hr{display:flex;gap:8px;align-items:center}
+.seg{display:inline-flex;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:2px}
+.seg button{border:0;background:transparent;padding:5px 11px;border-radius:999px;font-size:13px;color:var(--muted);min-height:32px}
+.seg button[aria-pressed=true]{background:var(--accent);color:#06241f;font-weight:700}
+.btn{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 13px;font-size:13px;min-height:36px;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--accent)}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:999px;background:rgba(94,234,212,.12);color:var(--accent);border:1px solid rgba(94,234,212,.35)}
+#settings{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:14px;animation:pop .2s ease}
+#settings[hidden]{display:none}
+#settings h3{margin:12px 0 8px;font-size:13px;color:var(--muted);font-weight:600}
+#settings h3:first-child{margin-top:0}
+.selbox{width:100%;max-width:340px;background:var(--card2);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:9px 10px;font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:6px 12px;font-size:13px;min-height:34px}
+.chip[aria-pressed=true]{border-color:var(--accent);background:rgba(94,234,212,.14);color:var(--accent);font-weight:600}
+.chip[aria-pressed=true]::before{content:"✓ "}
+.summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.sbox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.sbox .lb{font-size:12px;color:var(--muted)}
+.sbox .vl{font-size:18px;font-weight:700;display:flex;gap:12px;flex-wrap:wrap}
+.u{color:var(--up)}.d{color:var(--down)}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin:4px 0 10px}
+.meta{font-size:12px;color:var(--muted)}
+.layout{display:grid;gap:16px}
+.legend{font-size:12px;color:var(--muted);margin:0 0 8px}
+.list{display:flex;flex-direction:column;gap:10px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:14px;transition:transform .12s,border-color .12s}
+.item:hover{border-color:#3a4d86}
+.item.sel{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.row{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(70px,1fr) auto 12px;gap:10px;align-items:center;width:100%;text-align:left;background:transparent;border:0;border-radius:14px 14px 0 0;padding:12px 12px 6px}
+.tfs{display:flex;gap:6px;padding:0 12px 10px;flex-wrap:wrap}
+.tfb{background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12px;color:var(--muted);min-height:28px}
+.tfb:hover{border-color:var(--accent)}
+.tfb[aria-pressed=true]{background:rgba(94,234,212,.16);border-color:var(--accent);color:var(--accent);font-weight:700}
+.nm{font-weight:700;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cd{color:var(--muted);font-size:11px;margin-left:4px;font-weight:400}
+.pr{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.spark{width:100%;height:40px;display:block}
+.up{color:var(--up)}.down{color:var(--down)}
+.base{stroke:var(--muted);stroke-opacity:.5;stroke-width:1;stroke-dasharray:3 3;vector-effect:non-scaling-stroke}
+.rc{display:flex;flex-direction:column;align-items:flex-end;gap:5px}
+.chg{font-weight:800;font-size:16px;font-variant-numeric:tabular-nums}
+.fc{display:inline-flex;align-items:center;gap:4px;font-weight:800;font-size:13px;padding:2px 9px;border-radius:999px;font-variant-numeric:tabular-nums}
+.fc.up{background:var(--up-bg)}.fc.down{background:var(--down-bg)}
+.fc i{font-style:normal;font-size:16px;line-height:1}
+#detail{position:fixed;inset:0;z-index:20;background:var(--bg);overflow:auto;transform:translateY(100%);visibility:hidden;transition:transform .25s ease,visibility .25s}
+body.dopen #detail{transform:none;visibility:visible}
+body.dopen{overflow:hidden}
+.dwrap{max-width:640px;margin:0 auto;padding:12px 14px 40px}
+.dtop{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+.dh{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap}
+.dh h2{margin:0;font-size:20px}
+.big-pr{font-size:28px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
+.big{width:100%;height:auto;display:block;margin-top:8px}
+.xl{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.stats div{background:var(--card2);border-radius:10px;padding:6px 8px;font-size:12px;color:var(--muted)}
+.stats b{display:block;color:var(--text);font-size:13px;font-variant-numeric:tabular-nums}
+.fhead{display:flex;align-items:center;gap:12px}
+.arrow{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;font-size:34px;font-weight:800;flex:none;animation:pop .35s ease}
+.arrow.up{background:var(--up-bg)}.arrow.down{background:var(--down-bg)}
+.ft{font-size:18px;font-weight:800}
+.fs{font-size:12px;color:var(--muted)}
+.rng{position:relative;height:12px;border-radius:999px;margin:34px 6px 8px;background:linear-gradient(90deg,var(--down),#44507a 50%,var(--up))}
+.mk{position:absolute;top:-8px;width:4px;height:28px;background:#fff;border-radius:3px;transform:translateX(-2px)}
+.mk span{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);font-size:11px;background:#fff;color:#0b1220;border-radius:6px;padding:1px 6px;white-space:nowrap;font-weight:700}
+.rl{display:flex;justify-content:space-between;font-size:13px;font-variant-numeric:tabular-nums}
+.rl small{display:block;color:var(--muted);font-size:11px}
+.rl div:last-child{text-align:right}
+h3.sec{margin:0 0 8px;font-size:15px}
+ul.news{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+ul.news li{display:grid;grid-template-columns:52px 1fr auto;gap:8px;align-items:start;background:var(--card2);border-radius:10px;padding:9px 10px;font-size:13px}
+.ago{color:var(--muted);font-size:12px;padding-top:1px}
+.tag{font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px;white-space:nowrap}
+.tag.up{background:var(--up-bg)}.tag.down{background:var(--down-bg)}.tag.neu{background:#2a3556;color:var(--muted)}
+.wsvg{width:100%;height:auto;display:block;margin:4px 0 6px}
+.anr{display:grid;grid-template-columns:1fr auto;gap:2px 8px;background:var(--card2);border-radius:10px;padding:9px 10px;font-size:13px;margin-top:8px}
+.anr small{grid-column:1/-1;color:var(--muted);font-size:12px}
+.disc{font-size:11px;color:var(--muted);margin-top:14px}
+.guide{background:linear-gradient(135deg,#16264a,#13213d);border:1px solid var(--accent);border-radius:16px;padding:14px;margin-bottom:14px;animation:pop .25s ease}
+.guide[hidden]{display:none}
+.guide h2{margin:0 0 8px;font-size:16px}
+.guide ol{margin:0 0 12px;padding-left:22px;font-size:14px;display:flex;flex-direction:column;gap:6px}
+.guide ol li::marker{color:var(--accent);font-weight:800}
+.gact{display:flex;gap:8px;flex-wrap:wrap}
+.btn.pri{background:var(--accent);color:#06241f;border-color:var(--accent);font-weight:700}
+.chev{color:var(--muted);font-size:22px;line-height:1}
+.addbtn{width:100%;margin-top:10px;justify-content:center;border-style:dashed;border-color:var(--accent);color:var(--accent);font-weight:700;min-height:46px;border-radius:14px}
+.empty{color:var(--muted);text-align:center;padding:40px 10px}
+#addSheet{position:fixed;inset:0;z-index:40;background:rgba(3,8,18,.7);display:flex;align-items:flex-end;justify-content:center}
+#addSheet[hidden]{display:none}
+.sheet{width:100%;max-width:480px;max-height:82vh;overflow:auto;background:var(--card);border:1px solid var(--accent);border-radius:18px 18px 0 0;padding:14px;animation:pop .2s ease}
+@media(min-width:600px){#addSheet{align-items:center}.sheet{border-radius:18px}}
+.sheet h2{margin:0 0 4px;font-size:17px}
+.sheet p{margin:0 0 10px;font-size:12px;color:var(--muted)}
+.opt{display:flex;width:100%;justify-content:space-between;align-items:center;gap:10px;background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:8px;text-align:left;min-height:48px}
+.opt:hover{border-color:var(--accent)}
+.opt b{font-size:15px}
+.opt .plus{color:var(--accent);font-weight:800;white-space:nowrap}
+#toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#e8eefc;color:#0b1220;padding:9px 16px;border-radius:999px;font-size:13px;font-weight:600;z-index:50;opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center}
+#toast.show{opacity:1}
+@keyframes pop{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:none}}
+@media(max-width:380px){.brand small{display:none}.row{grid-template-columns:minmax(0,1fr) 64px auto 10px}}
+@media(min-width:900px){
+ .layout{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:start}
+ #detail{position:sticky;top:12px;transform:none;visibility:visible;inset:auto;background:transparent;overflow:visible;max-height:calc(100vh - 24px);overflow-y:auto;z-index:1}
+ body.dopen{overflow:auto}
+ .dwrap{padding:0}
+ .dtop .btn{display:none}
+ .dtop{display:none}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body data-color="gl">
+<div class="wrap">
+<header>
+ <div class="brand">
+  <svg width="36" height="36" viewBox="0 0 36 36" aria-hidden="true"><rect width="36" height="36" rx="10" fill="#18233b" stroke="#5eead4" stroke-opacity=".5"/><polyline points="5,21 11,21 14,10 19,27 23,16 26,21 31,21" fill="none" stroke="#5eead4" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <div><h1 data-i18n="appName">Market Pulse</h1><small data-i18n="tagline"></small></div>
+ </div>
+ <div class="hr">
+  <button class="btn" id="setBtn" data-demo="settings-toggle" aria-expanded="false" aria-controls="settings">⚙ <span data-i18n="settings"></span></button>
+  <div class="seg" data-demo="lang-switch" role="group" data-i18n-aria="langAria">
+   <button data-lang="ja" data-demo="lang-ja" aria-pressed="false">日本語</button>
+   <button data-lang="en" data-demo="lang-en" aria-pressed="true">EN</button>
+  </div>
+ </div>
+</header>
+
+<section id="settings" hidden data-demo="settings-panel">
+ <h3 data-i18n="baseLabel"></h3>
+ <select class="selbox" id="baseSel" data-demo="base-select" data-i18n-aria="baseLabel"></select>
+ <h3 data-i18n="pickLabel"></h3>
+ <div class="chips" id="chips" data-demo="chips"></div>
+ <h3 data-i18n="colorLabel"></h3>
+ <div class="seg" role="group" data-i18n-aria="colorLabel">
+  <button id="cJp" data-demo="color-jp" aria-pressed="false" data-i18n="colorJp"></button>
+  <button id="cGl" data-demo="color-gl" aria-pressed="false" data-i18n="colorGl"></button>
+ </div>
+</section>
+
+<section class="guide" id="guide" data-demo="guide">
+ <h2 data-i18n="guideTitle"></h2>
+ <ol><li data-i18n="g1"></li><li data-i18n="g2"></li><li data-i18n="g3"></li></ol>
+ <div class="gact">
+  <button class="btn pri" id="guideTry" data-demo="guide-try" data-i18n="guideTry"></button>
+  <button class="btn" id="guideClose" data-demo="guide-close" data-i18n="guideClose"></button>
+ </div>
+</section>
+
+<div class="summary" data-demo="summary">
+ <div class="sbox"><div class="lb" data-i18n="sumMove"></div><div class="vl" id="sumMove"></div></div>
+ <div class="sbox"><div class="lb" data-i18n="sumFc"></div><div class="vl" id="sumFc"></div></div>
+</div>
+
+<div class="layout">
+ <main>
+  <div class="bar">
+   <div class="seg" role="group" data-i18n-aria="sortAria">
+    <button id="sDef" data-demo="sort-default" aria-pressed="true" data-i18n="sortDef"></button>
+    <button id="sMov" data-demo="sort-move" aria-pressed="false" data-i18n="sortMove"></button>
+   </div>
+   <div style="display:flex;gap:8px">
+   <button class="btn" id="helpBtn" data-demo="help-toggle">？ <span data-i18n="help"></span></button>
+   <button class="btn" id="refBtn" data-demo="refresh">↻ <span data-i18n="refresh"></span></button>
+   </div>
+  </div>
+  <p class="meta" id="metaLine" style="margin:0 0 4px"></p>
+  <p class="legend" data-i18n="legend"></p>
+  <div class="list" id="list" data-demo="stock-list"></div>
+  <button class="btn addbtn" id="addBtn" data-demo="add-instrument">＋ <span data-i18n="addIns"></span></button>
+ </main>
+ <aside id="detail" aria-live="polite" data-demo="detail-panel">
+  <div class="dwrap">
+   <div class="dtop"><button class="btn" id="closeBtn" data-demo="detail-close">← <span data-i18n="back"></span></button><span class="badge" data-i18n="sample"></span></div>
+   <div id="detailBody"></div>
+  </div>
+ </aside>
+</div>
+<p class="disc" data-i18n="disclaimer"></p>
+</div>
+<div id="addSheet" hidden data-demo="add-sheet">
+ <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="addTitle">
+  <h2 id="addTitle" data-i18n="addTitle"></h2>
+  <p data-i18n="addHint"></p>
+  <div id="addList" data-demo="add-list"></div>
+  <button class="btn pri" id="addDone" data-demo="add-done" style="width:100%;justify-content:center" data-i18n="done"></button>
+ </div>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const I18N={
+ja:{title:"マーケットパルス",appName:"マーケットパルス",tagline:"値動きと今日の予想をひと目で",settings:"設定",langAria:"言語切り替え",
+baseLabel:"標準の表示期間（全銘柄に適用。銘柄ごとにも変更できます）",pickLabel:"表示する銘柄（複数選べます）",colorLabel:"上昇・下落の色",colorJp:"上昇＝赤 / 下落＝青",colorGl:"上昇＝緑 / 下落＝赤",
+tfs_5m:"5分",tfs_15m:"15分",tfs_1h:"1時間",tfs_4h:"4時間",tfs_1d:"1日",
+tfl_5m:"直近5分",tfl_15m:"直近15分",tfl_1h:"直近1時間",tfl_4h:"直近4時間",tfl_1d:"直近1日（24時間）",
+tfAria:"{n}の表示期間",
+sumMove:"上昇・下落（各銘柄の表示期間）",sumFc:"今日の予想",up:"上昇",down:"下落",upN:"↑ {n}銘柄",downN:"↓ {n}銘柄",
+sortAria:"並べ替え",sortDef:"設定順",sortMove:"動きの大きい順",refresh:"更新",updated:"最終更新 {t}",
+legend:"チャートと変化率は、各行の下のボタンで選んだ期間。右側の ↑↓ は今日の予想（％は確度）。タップで詳細。",
+back:"一覧へ",close:"閉じる",sample:"サンプルデータ",
+fcTitle:"今日の予想",likelyUp:"今日は上がりそう",likelyDown:"今日は下がりそう",conf:"確度 {p}%（サンプル）",newsMix:"直近24時間の材料：強気 {a} / 弱気 {b}",
+rangeTitle:"今日の予想レンジ",lowT:"下値の目安",highT:"上値の目安",nowT:"現在",
+baseV:"期間の始値",wHigh:"期間高値",wLow:"期間安値",
+fund:"直近24時間のファンダ",bull:"↑ 強気",bear:"↓ 弱気",neu:"→ 中立",agoH:"{h}時間前",
+pick:"銘柄をタップすると、今日の予想レンジとファンダが表示されます。",
+minOne:"銘柄は最低1つ必要です",refreshed:"サンプルデータを更新しました",saved:"標準の表示期間を変更しました",
+disclaimer:"※ すべてのデータ・分析はシミュレーション（サンプル）です。価格は最近の水準に近い概算で、リアルタイムではありません。投資判断の助言ではありません。",
+rowAria:"{n}：{c}、今日の予想は{f}",fcUp:"上昇",fcDown:"下落",
+help:"使い方",guideTitle:"📖 使い方（3ステップ）",g1:"一覧の各行：左＝銘柄、中央＝チャート、右＝変化率と今日の予想（↑上がる／↓下がる）。",g2:"各行の下のボタン（5分〜1日）で、その銘柄のチャートと変化率の期間を切り替えられます。行をタップすると今日の予想レンジとファンダが開きます。",g3:"一覧の下の「＋銘柄を追加」か右上の「設定」で、銘柄・標準の表示期間・色を変えられます。",guideTry:"👉 銘柄をひらいてみる",guideClose:"閉じる",addIns:"銘柄を追加",addHint:"追加したい銘柄をタップすると、一覧に加わります",addTitle:"銘柄を追加",done:"完了",allAdded:"すべての銘柄を追加済みです",added:"{n}を追加しました",basis:"予想の根拠：直近24時間の強気／弱気の材料の差＋直近の値動きの勢い＋波動アナリストの意見（サンプルの計算）",waveTitle:"🌊 エリオット波動アナリスト",waveNow:"現在：第{w}波が進行中（強気 {a} / 弱気 {b}）",wBull:"{w}波進行中。上値を試す展開",wBear:"{w}波の終盤、調整に注意",waveNote:"※サンプル。この意見は↑↓の予想に加味しています",asOf:"{d} {t} 時点",autoUpd:"最新の予想に更新しました"},
+en:{title:"Market Pulse",appName:"Market Pulse",tagline:"Moves and today's outlook at a glance",settings:"Settings",langAria:"Language switch",
+baseLabel:"Default period (applies to all; you can also change each one)",pickLabel:"Instruments to show (pick several)",colorLabel:"Up / down colors",colorJp:"Up = red / Down = blue",colorGl:"Up = green / Down = red",
+tfs_5m:"5m",tfs_15m:"15m",tfs_1h:"1h",tfs_4h:"4h",tfs_1d:"1d",
+tfl_5m:"Last 5 minutes",tfl_15m:"Last 15 minutes",tfl_1h:"Last 1 hour",tfl_4h:"Last 4 hours",tfl_1d:"Last 1 day (24 hours)",
+tfAria:"Time range for {n}",
+sumMove:"Up / down (each one's period)",sumFc:"Today's outlook",up:"Up",down:"Down",upN:"↑ {n} up",downN:"↓ {n} down",
+sortAria:"Sort",sortDef:"My order",sortMove:"Biggest moves",refresh:"Refresh",updated:"Updated {t}",
+legend:"Charts and changes use the period chosen under each row. The ↑↓ on the right is today's outlook (% = confidence). Tap for details.",
+back:"Back",close:"Close",sample:"Sample data",
+fcTitle:"Today's outlook",likelyUp:"Likely to rise today",likelyDown:"Likely to fall today",conf:"Confidence {p}% (sample)",newsMix:"News in the last 24h: {a} bullish / {b} bearish",
+rangeTitle:"Expected range today",lowT:"Low target",highT:"High target",nowT:"Now",
+baseV:"Period open",wHigh:"Period high",wLow:"Period low",
+fund:"Fundamentals, last 24 hours",bull:"↑ Bullish",bear:"↓ Bearish",neu:"→ Neutral",agoH:"{h}h ago",
+pick:"Tap an instrument to see today's expected range and the news behind it.",
+minOne:"Keep at least one instrument",refreshed:"Sample data refreshed",saved:"Default period changed",
+disclaimer:"* All data and analysis are simulated samples. Prices are rough figures near recent levels, not real-time, and not investment advice.",
+rowAria:"{n}: {c}, today's outlook is {f}",fcUp:"up",fcDown:"down",
+help:"How to use",guideTitle:"📖 How to use (3 steps)",g1:"Each row: left = name, middle = chart, right = change and today's outlook (↑ rise / ↓ fall).",g2:"Use the buttons under each row (5m to 1d) to change the chart and change-rate period for that instrument. Tap a row to open today's expected range and news.",g3:"Use \"+ Add instrument\" below the list or \"Settings\" at the top right to change instruments, the default period and colors.",guideTry:"👉 Open an instrument",guideClose:"Close",addIns:"Add instrument",addHint:"Tap an instrument to add it to your list",addTitle:"Add instrument",done:"Done",allAdded:"All instruments are already added",added:"Added {n}",basis:"How it's decided: bullish vs. bearish news in the last 24h, recent price momentum, and Elliott wave analysts' views (a sample calculation)",waveTitle:"🌊 Elliott wave analysts",waveNow:"Now: wave {w} in progress (bullish {a} / bearish {b})",wBull:"Wave {w} under way. Looking to test highs",wBear:"Late in wave {w}. Watch for a pullback",waveNote:"* Sample. These views are included in the ↑↓ outlook",asOf:"As of {d} {t}",autoUpd:"Updated to the latest outlook"}
+};
+const INS=[
+{id:"n225",cat:"jp",base:50000,dec:0,pre:"",vol:1.2,code:"N225",n:{ja:"日経平均",en:"Nikkei 225"}},
+{id:"topix",cat:"jp",base:3300.5,dec:1,pre:"",vol:1.0,code:"TOPIX",n:{ja:"TOPIX",en:"TOPIX"}},
+{id:"spx",cat:"us",base:6700.3,dec:1,pre:"",vol:1.0,code:"SPX",n:{ja:"S&P 500",en:"S&P 500"}},
+{id:"ndx",cat:"us",base:24800.2,dec:1,pre:"",vol:1.3,code:"NDX",n:{ja:"ナスダック100",en:"NASDAQ 100"}},
+{id:"usdjpy",cat:"usdjpy",base:155.2,dec:2,pre:"",vol:.6,code:"USD/JPY",n:{ja:"ドル円",en:"USD/JPY"}},
+{id:"eurusd",cat:"eurusd",base:1.1550,dec:4,pre:"",vol:.5,code:"EUR/USD",n:{ja:"ユーロドル",en:"EUR/USD"}},
+{id:"gold",cat:"gold",base:4100.4,dec:1,pre:"$",vol:.9,code:"XAU",n:{ja:"金（ゴールド）",en:"Gold"}},
+{id:"wti",cat:"wti",base:60.1,dec:2,pre:"$",vol:1.8,code:"WTI",n:{ja:"WTI原油",en:"WTI Crude"}},
+{id:"btc",cat:"crypto",base:82700,dec:0,pre:"$",vol:2.8,code:"BTC",n:{ja:"ビットコイン",en:"Bitcoin"}},
+{id:"toyota",cat:"jp",base:2900,dec:0,pre:"",vol:1.5,code:"7203",n:{ja:"トヨタ自動車",en:"Toyota Motor"}},
+{id:"sony",cat:"jp",base:3900,dec:0,pre:"",vol:1.6,code:"6758",n:{ja:"ソニーG",en:"Sony Group"}},
+{id:"nvda",cat:"us",base:185.4,dec:2,pre:"$",vol:3.0,code:"NVDA",n:{ja:"エヌビディア",en:"NVIDIA"}}
+];
+const NEWS={
+jp:[["日銀総裁が「緩和的な金融環境は当面継続」と発言","BOJ governor says easy financial conditions will continue for now",1],["主要企業の決算で上方修正が相次ぐ","Several major firms raise their earnings forecasts",1],["円高進行で輸出関連株に売り圧力","A stronger yen weighs on exporter stocks",-1],["海外投資家が日本株を買い越し","Foreign investors are net buyers of Japanese shares",1],["機械受注が市場予想を下回る","Machinery orders come in below expectations",-1],["政府が追加の経済対策を検討と報道","Report: government weighing extra stimulus",1],["中国の景気減速懸念が再燃","Worries about China's slowdown return",-1]],
+us:[["米CPIは予想通り、利下げ観測が維持","US CPI in line; rate-cut hopes remain",1],["米新規失業保険申請が増加","US jobless claims rise",-1],["大手ハイテクがAI投資の拡大を発表","Big tech announces bigger AI spending",1],["米長期金利が上昇、株式の重しに","US long-term yields rise, weighing on stocks",-1],["FRB高官がタカ派的な発言","A Fed official makes hawkish remarks",-1],["小売売上高が堅調、消費は底堅い","Retail sales are solid; consumer spending holds up",1]],
+usdjpy:[["日米の金利差が意識されドル買い","The US-Japan rate gap drives dollar buying",1],["当局者が為替介入を示唆","Officials hint at FX intervention",-1],["米雇用統計が強く、ドル高に","Strong US jobs data lifts the dollar",1],["日銀の早期利上げ観測が浮上","Talk of an early BOJ rate hike emerges",-1]],
+eurusd:[["ECB高官が利下げに慎重な姿勢","An ECB official sounds cautious on rate cuts",1],["ユーロ圏PMIが予想を下回る","Eurozone PMI misses expectations",-1],["ドル指数が反発","The dollar index rebounds",-1],["独の景況感が改善","German business sentiment improves",1]],
+gold:[["地政学リスクで安全資産の金に買い","Geopolitical risk drives buying of safe-haven gold",1],["ドル高で金に売り圧力","A stronger dollar pressures gold",-1],["中央銀行が金の購入を継続","Central banks keep buying gold",1],["米実質金利が上昇","US real yields rise",-1]],
+wti:[["OPEC+が減産継続を示唆","OPEC+ signals production cuts will continue",1],["米原油在庫が予想以上に増加","US crude inventories rise more than expected",-1],["中東情勢の緊迫で供給懸念","Middle East tension raises supply worries",1],["世界の需要見通しが下方修正","Global demand outlook is revised down",-1]],
+crypto:[["現物ETFへの資金流入が拡大","Inflows into spot ETFs grow",1],["大手取引所のハッキング報道","Report of a hack at a major exchange",-1],["規制当局が明確なルールを提示","Regulators outline clearer rules",1],["大口保有者の売りを観測","Large holders seen selling",-1]]
+};
+const TFS=["5m","15m","1h","4h","1d"];
+const TMIN={"5m":5,"15m":15,"1h":60,"4h":240,"1d":1440};
+const AN=[{ja:"波乃さん",en:"Nami N."},{ja:"チャート太郎",en:"Chart Taro"},{ja:"相場ミドリ",en:"Midori S."}];
+const $=s=>document.querySelector(s);
+let lang=initLang();
+let S=loadS();
+let salt=0,cache={},stamp=new Date();
+function initLang(){
+ if(window.APP_LANG==="ja"||window.APP_LANG==="en")return window.APP_LANG;
+ try{const q=new URLSearchParams(location.search).get("lang");if(q==="ja"||q==="en")return q}catch(e){}
+ try{const v=localStorage.getItem("lang");if(v==="ja"||v==="en")return v}catch(e){}
+ return "en";
+}
+function loadS(){
+ const d={sel:["n225","usdjpy","spx","gold","btc"],base:"1d",tf:{},color:null,sort:"def",cur:null};
+ try{const j=JSON.parse(localStorage.getItem("mp_settings")||"null");if(j){
+  if(Array.isArray(j.sel)&&j.sel.length)d.sel=j.sel.filter(x=>INS.some(i=>i.id===x));
+  if(TFS.includes(j.base))d.base=j.base;
+  if(j.tf&&typeof j.tf==="object")for(const k in j.tf)if(TFS.includes(j.tf[k])&&INS.some(i=>i.id===k))d.tf[k]=j.tf[k];
+  if(j.color==="jp"||j.color==="gl")d.color=j.color}}catch(e){}
+ if(!d.sel.length)d.sel=["n225"];
+ return d;
+}
+function saveS(){try{localStorage.setItem("mp_settings",JSON.stringify({sel:S.sel,base:S.base,tf:S.tf,color:S.color}))}catch(e){}}
+function t(k,v){let s=(I18N[lang]&&I18N[lang][k])||k;if(v)for(const x in v)s=s.replace("{"+x+"}",v[x]);return s}
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function slotKey(){const d=new Date();return d.toDateString()+"#"+d.getHours()+"-"+Math.floor(d.getMinutes()/30)}
+function asOf(){const d=stamp,p=n=>String(n).padStart(2,"0");return t("asOf",{d:(d.getMonth()+1)+"/"+d.getDate(),t:p(d.getHours())+":"+p(d.getMinutes())})}
+const N=5760; /* 15-second points over 24 hours */
+function getTf(id){return S.tf[id]||S.base}
+function model(id){
+ if(cache[id])return cache[id];
+ const ins=INS.find(i=>i.id===id),r=rng(hash(id+slotKey()+salt)),v=ins.vol/100;
+ const drift=(r()-.5)*v*1.6/N,sd=v*1.5/Math.sqrt(N),w=[1];
+ for(let i=1;i<=N;i++){const g=(r()+r()-1)*2.449;w.push(w[i-1]*(1+drift+g*sd))}
+ const price=ins.base*(1+(r()-.5)*.01),series=w.map(x=>price*x/w[N]);
+ const pool=NEWS[ins.cat].map(n=>({ja:n[0],en:n[1],s:n[2],k:r()})).sort((a,b)=>a.k-b.k).slice(0,5);
+ pool.forEach(n=>n.h=1+r()*22);pool.sort((a,b)=>a.h-b.h);
+ const mom=(w[N]/w[N-1440]-1)/v,bull=pool.filter(n=>n.s>0).length,bear=pool.length-bull;
+ const wv=1+Math.floor(r()*5),pb=[0,.75,.5,.8,.5,.3][wv];
+ const an=AN.map(a=>({name:a,s:r()<pb?1:-1})),wb=an.filter(a=>a.s>0).length,wr=an.length-wb;
+ const score=pool.reduce((a,n)=>a+n.s,0)+.5*mom+.5*(wb-wr)+(r()-.5)*.6,up=score>=0;
+ const prob=Math.round(52+Math.min(Math.abs(score),3)*8+r()*4);
+ const hi=price*(1+v*(up?.7+r()*.5:.3+r()*.3)),lo=price*(1-v*(up?.3+r()*.3:.7+r()*.5));
+ return cache[id]={ins,series,price,news:pool,up,prob,hi,lo,bull,bear,wv,an,wb,wr};
+}
+function win(m,tf){const pts=TMIN[tf]*4;return m.series.slice(N-pts)}
+function ds(v){if(v.length<=150)return v;const o=[],k=(v.length-1)/149;for(let i=0;i<150;i++)o.push(v[Math.round(i*k)]);return o}
+function fmt(v,ins){return ins.pre+v.toLocaleString(lang==="ja"?"ja-JP":"en-US",{minimumFractionDigits:ins.dec,maximumFractionDigits:ins.dec})}
+function pct(c){return(c>=0?"+":"-")+Math.abs(c*100).toFixed(2)+"%"}
+function chart(v0,W,H,big){
+ const v=ds(v0),mn=Math.min(...v),mx=Math.max(...v),p=(mx-mn)||1,pad=big?10:3;
+ const X=i=>i/(v.length-1)*W,Y=x=>pad+(1-(x-mn)/p)*(H-2*pad);
+ const pts=v.map((x,i)=>X(i).toFixed(1)+","+Y(x).toFixed(1)).join(" "),by=Y(v[0]).toFixed(1);
+ return `<svg viewBox="0 0 ${W} ${H}" ${big?"":'preserveAspectRatio="none"'} class="${big?"big":"spark"}" aria-hidden="true"><line x1="0" x2="${W}" y1="${by}" y2="${by}" class="base"/><polygon points="${pts} ${W},${H} 0,${H}" fill="currentColor" fill-opacity=".13"/><polyline points="${pts}" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>${big?`<circle cx="${W}" cy="${Y(v[v.length-1]).toFixed(1)}" r="4.5" fill="currentColor"/>`:""}</svg>`;
+}
+function calc(id){const m=model(id),tf=getTf(id),w=win(m,tf),chg=w[w.length-1]/w[0]-1;return{m,w,chg,tf}}
+function isDesk(){return window.matchMedia("(min-width:900px)").matches}
+function ensureCur(){
+ if(S.cur&&!S.sel.includes(S.cur))S.cur=null;
+ if(!S.cur&&isDesk())S.cur=S.sel[0];
+}
+function tfBar(id,tf,pre){
+ const nm=INS.find(i=>i.id===id).n[lang];
+ return `<div class="tfs" role="group" aria-label="${t("tfAria",{n:nm})}">`+TFS.map(x=>`<button class="tfb" data-id="${id}" data-tf="${x}" data-demo="${pre}-${id}-${x}" aria-pressed="${x===tf}" aria-label="${t("tfl_"+x)}">${t("tfs_"+x)}</button>`).join("")+`</div>`;
+}
+function renderList(){
+ let items=S.sel.map(id=>({id,...calc(id)}));
+ if(S.sort==="move")items.sort((a,b)=>Math.abs(b.chg)-Math.abs(a.chg));
+ $("#list").innerHTML=items.map(o=>{
+  const ins=o.m.ins,c=o.chg>=0?"up":"down",f=o.m.up?"up":"down";
+  const al=t("rowAria",{n:ins.n[lang],c:pct(o.chg),f:t(o.m.up?"fcUp":"fcDown")});
+  return `<div class="item ${S.cur===o.id?"sel":""}"><button class="row" data-id="${o.id}" data-demo="stock-${o.id}" aria-label="${al}">
+  <div><div class="nm">${ins.n[lang]}<span class="cd">${ins.code}</span></div><div class="pr">${fmt(o.m.price,ins)}</div></div>
+  <div class="${c}">${chart(o.w,100,40,false)}</div>
+  <div class="rc"><span class="chg ${c==="up"?"u":"d"}">${pct(o.chg)}</span><span class="fc ${f}"><i>${o.m.up?"↑":"↓"}</i>${o.m.prob}%</span></div><span class="chev" aria-hidden="true">›</span></button>${tfBar(o.id,o.tf,"tf")}</div>`}).join("");
+ const nu=items.filter(o=>o.chg>=0).length,fu=items.filter(o=>o.m.up).length;
+ $("#sumMove").innerHTML=`<span class="u">${t("upN",{n:nu})}</span><span class="d">${t("downN",{n:items.length-nu})}</span>`;
+ $("#sumFc").innerHTML=`<span class="u">${t("upN",{n:fu})}</span><span class="d">${t("downN",{n:items.length-fu})}</span>`;
+ const hh=String(stamp.getHours()).padStart(2,"0")+":"+String(stamp.getMinutes()).padStart(2,"0");
+ $("#metaLine").textContent=t("updated",{t:hh});
+}
+function agoT(h){return t("agoH",{h:Math.max(1,Math.round(h))})}
+function waveCard(m){
+ const P=[[5,60],[50,30],[80,45],[170,8],[205,28],[250,15]],L="①②③④⑤",cur=P[m.wv];
+ const pl=a=>a.map(p=>p.join(",")).join(" ");
+ const lab=P.slice(1).map((p,i)=>`<text x="${p[0]-4}" y="${p[1]+(i%2===0?-6:15)}" style="fill:var(--muted);font-size:12px">${L[i]}</text>`).join("");
+ const rows=m.an.map(a=>`<div class="anr"><b>${a.name[lang]}</b><span class="tag ${a.s>0?"up":"down"}">${t(a.s>0?"bull":"bear")}</span><small>${t(a.s>0?"wBull":"wBear",{w:m.wv})}</small></div>`).join("");
+ return `<div class="card" data-demo="wave-card"><h3 class="sec">${t("waveTitle")}</h3>
+ <svg class="wsvg" viewBox="0 0 300 72" aria-hidden="true"><polyline points="${pl(P.slice(m.wv))}" fill="none" style="stroke:var(--muted)" stroke-width="1.6" stroke-dasharray="4 4"/><polyline points="${pl(P.slice(0,m.wv+1))}" fill="none" stroke="#5eead4" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>${lab}<circle cx="${cur[0]}" cy="${cur[1]}" r="5" fill="#5eead4"/></svg>
+ <div class="fs">${t("waveNow",{w:m.wv,a:m.wb,b:m.wr})}</div>${rows}<div class="disc" style="margin-top:8px">${t("waveNote")}</div></div>`;
+}
+function renderDetail(){
+ const el=$("#detailBody");
+ if(!S.cur){el.innerHTML=`<p class="empty">${t("pick")}</p>`;return}
+ const o=calc(S.cur),m=o.m,ins=m.ins,c=o.chg>=0?"up":"down",f=m.up?"up":"down";
+ const mn=Math.min(...o.w),mx=Math.max(...o.w),span=m.hi-m.lo,pos=Math.max(0,Math.min(100,(m.price-m.lo)/span*100));
+ el.innerHTML=`
+ <div class="card"><div class="dh"><div><h2>${ins.n[lang]} <span class="cd">${ins.code}</span></h2><div class="meta">${t("tfl_"+o.tf)}</div></div>
+ <div style="text-align:right"><div class="big-pr">${fmt(m.price,ins)}</div><div class="chg ${c==="up"?"u":"d"}">${pct(o.chg)}</div></div></div>
+ <div class="${c}">${chart(o.w,300,120,true)}</div>
+ <div class="xl"><span>${t("tfl_"+o.tf)}</span><span>${t("nowT")}</span></div>
+ <div style="margin-top:8px">${tfBar(S.cur,o.tf,"dtf").replace('class="tfs"','class="tfs" style="padding:0"')}</div>
+ <div class="stats"><div>${t("baseV")}<b>${fmt(o.w[0],ins)}</b></div><div>${t("wHigh")}<b>${fmt(mx,ins)}</b></div><div>${t("wLow")}<b>${fmt(mn,ins)}</b></div></div></div>
+ <div class="card" data-demo="forecast-card"><h3 class="sec">${t("fcTitle")} <span class="badge">${asOf()}</span></h3>
+ <div class="fhead"><div class="arrow ${f}">${m.up?"↑":"↓"}</div><div><div class="ft ${f==="up"?"u":"d"}">${t(m.up?"likelyUp":"likelyDown")}</div><div class="fs">${t("conf",{p:m.prob})}</div><div class="fs">${t("newsMix",{a:m.bull,b:m.bear})}</div><div class="fs" style="margin-top:4px">${t("basis")}</div></div></div>
+ <h3 class="sec" style="margin-top:16px">${t("rangeTitle")}</h3>
+ <div class="rng"><div class="mk" style="left:${pos}%"><span>${t("nowT")}</span></div></div>
+ <div class="rl"><div><small>${t("lowT")}</small><b class="d">${fmt(m.lo,ins)}</b></div><div><small>${t("highT")}</small><b class="u">${fmt(m.hi,ins)}</b></div></div></div>
+ ${waveCard(m)}
+ <div class="card" data-demo="fundamentals"><h3 class="sec">${t("fund")}</h3><ul class="news">${m.news.map(n=>`<li><span class="ago">${agoT(n.h)}</span><span>${n[lang]}</span><span class="tag ${n.s>0?"up":n.s<0?"down":"neu"}">${t(n.s>0?"bull":n.s<0?"bear":"neu")}</span></li>`).join("")}</ul></div>`;
+}
+function renderSettings(){
+ $("#baseSel").innerHTML=TFS.map(b=>`<option value="${b}" ${b===S.base?"selected":""}>${t("tfl_"+b)}</option>`).join("");
+ $("#chips").innerHTML=INS.map(i=>`<button class="chip" data-id="${i.id}" data-demo="chip-${i.id}" aria-pressed="${S.sel.includes(i.id)}">${i.n[lang]}</button>`).join("");
+ const eff=S.color||(lang==="ja"?"jp":"gl");
+ document.body.dataset.color=eff;
+ $("#cJp").setAttribute("aria-pressed",eff==="jp");$("#cGl").setAttribute("aria-pressed",eff==="gl");
+ $("#sDef").setAttribute("aria-pressed",S.sort==="def");$("#sMov").setAttribute("aria-pressed",S.sort==="move");
+}
+function applyStatic(){
+ document.documentElement.lang=lang;document.title=t("title");
+ document.querySelectorAll("[data-i18n]").forEach(e=>e.textContent=t(e.dataset.i18n));
+ document.querySelectorAll("[data-i18n-aria]").forEach(e=>e.setAttribute("aria-label",t(e.dataset.i18nAria)));
+ $("#closeBtn").setAttribute("aria-label",t("close"));
+ document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===lang));
+}
+function renderAdd(){
+ const rest=INS.filter(i=>!S.sel.includes(i.id));
+ $("#addList").innerHTML=rest.length?rest.map(i=>`<button class="opt" data-id="${i.id}" data-demo="add-${i.id}"><span><b>${i.n[lang]}</b> <span class="cd">${i.code}</span></span><span class="plus">＋</span></button>`).join(""):`<p class="empty">${t("allAdded")}</p>`;
+}
+function render(){ensureCur();applyStatic();renderSettings();renderList();renderDetail();renderAdd()}
+let tt;
+function toast(msg){const e=$("#toast");e.textContent=msg;e.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>e.classList.remove("show"),2200)}
+function openDetail(id){
+ S.cur=id;renderList();renderDetail();
+ if(!isDesk()){document.body.classList.add("dopen");$("#detail").scrollTop=0;setTimeout(()=>$("#closeBtn").focus(),50)}
+}
+function closeDetail(){
+ const id=S.cur;document.body.classList.remove("dopen");
+ if(!isDesk()){S.cur=null;renderList();const r=document.querySelector(`.row[data-id="${id}"]`);if(r)r.focus()}
+}
+function setTf(b){
+ const id=b.dataset.id,tf=b.dataset.tf,demo=b.dataset.demo;
+ S.tf[id]=tf;saveS();renderList();if(S.cur===id)renderDetail();
+ const nb=document.querySelector(`[data-demo="${demo}"]`);if(nb)nb.focus();
+}
+$("#list").addEventListener("click",e=>{
+ const tb=e.target.closest(".tfb");if(tb){setTf(tb);return}
+ const b=e.target.closest(".row");if(b)openDetail(b.dataset.id)
+});
+$("#detailBody").addEventListener("click",e=>{const tb=e.target.closest(".tfb");if(tb)setTf(tb)});
+$("#closeBtn").addEventListener("click",closeDetail);
+document.addEventListener("keydown",e=>{
+ if(e.key!=="Escape")return;
+ if(!$("#addSheet").hidden){$("#addSheet").hidden=true;return}
+ if(document.body.classList.contains("dopen"))closeDetail();
+});
+$("#setBtn").addEventListener("click",()=>{const s=$("#settings"),h=s.hidden;s.hidden=!h;$("#setBtn").setAttribute("aria-expanded",String(h))});
+$("#addBtn").addEventListener("click",()=>{renderAdd();$("#addSheet").hidden=false;setTimeout(()=>$("#addDone").focus(),30)});
+$("#addDone").addEventListener("click",()=>{$("#addSheet").hidden=true;$("#addBtn").focus()});
+$("#addSheet").addEventListener("click",e=>{if(e.target.id==="addSheet")$("#addSheet").hidden=true});
+$("#addList").addEventListener("click",e=>{
+ const b=e.target.closest(".opt");if(!b)return;const id=b.dataset.id;
+ S.sel=INS.filter(x=>S.sel.includes(x.id)||x.id===id).map(x=>x.id);
+ saveS();render();toast(t("added",{n:INS.find(x=>x.id===id).n[lang]}));
+});
+$("#chips").addEventListener("click",e=>{
+ const b=e.target.closest(".chip");if(!b)return;const id=b.dataset.id,i=S.sel.indexOf(id);
+ if(i>=0){if(S.sel.length===1){toast(t("minOne"));return}S.sel.splice(i,1)}
+ else{S.sel=INS.filter(x=>S.sel.includes(x.id)||x.id===id).map(x=>x.id)}
+ saveS();render();
+});
+$("#baseSel").addEventListener("change",e=>{S.base=e.target.value;S.tf={};saveS();render();toast(t("saved"))});
+$("#cJp").addEventListener("click",()=>{S.color="jp";saveS();render()});
+$("#cGl").addEventListener("click",()=>{S.color="gl";saveS();render()});
+$("#sDef").addEventListener("click",()=>{S.sort="def";render()});
+$("#sMov").addEventListener("click",()=>{S.sort="move";render()});
+$("#refBtn").addEventListener("click",()=>{salt++;cache={};stamp=new Date();render();toast(t("refreshed"))});
+function setGuide(on){
+ $("#guide").hidden=!on;
+ try{localStorage.setItem("mp_guide",on?"1":"0")}catch(e){}
+}
+(function(){let g="1";try{g=localStorage.getItem("mp_guide")||"1"}catch(e){}$("#guide").hidden=(g==="0")})();
+$("#guideClose").addEventListener("click",()=>setGuide(false));
+$("#helpBtn").addEventListener("click",()=>{setGuide(true);window.scrollTo({top:0,behavior:"smooth"})});
+$("#guideTry").addEventListener("click",()=>{openDetail(S.sel[0]);if(isDesk())$("#detail").scrollIntoView({behavior:"smooth",block:"nearest"})});
+document.querySelectorAll("[data-lang]").forEach(b=>b.addEventListener("click",()=>{
+ lang=b.dataset.lang;try{localStorage.setItem("lang",lang)}catch(e){}render();
+}));
+window.addEventListener("resize",()=>{if(isDesk())document.body.classList.remove("dopen");const c=S.cur;ensureCur();if(c!==S.cur){renderList();renderDetail()}});
+render();
+let lastKey=slotKey();
+function autoCheck(){const k=slotKey();if(k!==lastKey){lastKey=k;cache={};stamp=new Date();render();toast(t("autoUpd"))}}
+setInterval(autoCheck,30000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)autoCheck()});
+</script>
+</body>
+</html>
