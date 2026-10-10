@@ -50,6 +50,8 @@ header{display:flex;align-items:center;gap:10px;justify-content:space-between;pa
 .tfs{display:flex;gap:6px;padding:0 12px 10px;flex-wrap:wrap}
 .tfb{background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12px;color:var(--muted);min-height:28px}
 .tfb:hover{border-color:var(--accent)}
+.rmb{margin-left:auto;color:var(--muted)}
+.rmb:hover{border-color:var(--down);color:var(--down)}
 .tfb[aria-pressed=true]{background:rgba(94,234,212,.16);border-color:var(--accent);color:var(--accent);font-weight:700}
 .nm{font-weight:700;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cd{color:var(--muted);font-size:11px;margin-left:4px;font-weight:400}
@@ -259,7 +261,7 @@ rowAria:"{n}：{c}、今日の予想は{f}",fcUp:"上昇",fcDown:"下落",
 help:"使い方",guideTitle:"📖 使い方（3ステップ）",g1:"一覧の各行：左＝銘柄、中央＝チャート、右＝変化率と今日の予想（↑上がる／↓下がる）。",g2:"各行の下のボタン（5分〜1日）で、その銘柄のチャートと変化率の期間を切り替えられます。行をタップすると今日の予想レンジとファンダが開きます。",g3:"一覧の下の「＋銘柄を追加」か右上の「設定」で、銘柄・標準の表示期間・色を変えられます。",guideTry:"👉 銘柄をひらいてみる",guideClose:"閉じる",addIns:"銘柄を追加",addHint:"追加したい銘柄をタップすると、一覧に加わります",addTitle:"銘柄を追加",done:"完了",allAdded:"すべての銘柄を追加済みです",added:"{n}を追加しました",basis:"予想の根拠：直近24時間の強気／弱気の材料の差＋直近の値動きの勢い＋波動アナリストの意見（サンプルの計算）",waveTitle:"🌊 エリオット波動アナリスト",waveNow:"現在：第{w}波が進行中（強気 {a} / 弱気 {b}）",wBull:"{w}波進行中。上値を試す展開",wBear:"{w}波の終盤、調整に注意",waveNote:"※サンプル。今日出た予想のみ採用し、現在価格から大きく外れた目標は除外しています。この意見は↑↓の予想に加味しています",anAt:"今日 {t} に予想（{h}）",anTgt:"目標 {p}（{c}）",anTgtShort:"目標",anCap:"{n}さんの予想（{t}時点・縦の点線）から目標までの道すじ。名前をタップで切り替え",asOf:"{d} {t} 時点",autoUpd:"最新の予想に更新しました",pxLabel:"現在の価格を入力（全銘柄）",pxHint:"元の通貨（円／ドル／pt）で、今の実際の価格を入れると、チャートと予想レンジがその価格に合わせて作り直されます。空欄はサンプル価格です。",pxReset:"サンプル価格に戻す",pxSaved:"価格を反映しました",pxReseted:"サンプル価格に戻しました",pxNow:"今の価格を入力（Enterで反映）",pxReal:"入力した価格",pxSamp:"サンプル価格（実際とは異なります）",
 ccyLabel:"表示通貨（株・金・原油・BTCに適用。指数はポイントのまま）",ccyOrig:"元の通貨",ccyJPY:"円（¥）",ccyUSD:"ドル（$）",
 uPt:"単位：ポイント（指数。円やドルではありません）",uFx:"単位：為替レート",uJPY:"円建て",uUSD:"ドル建て",uNat:"{c}で表示",uConv:"元は{o}。1ドル＝{r}円で{c}に換算",
-addSearch:"銘柄名・コードで検索",noMatch:"一致する銘柄がありません。下で入力して追加できます",cusTitle:"リストにない銘柄を入力して追加",cusName:"銘柄名",cusCode:"コード（任意）",cusPrice:"現在の価格",cusCur:"単位",cusBtn:"入力した銘柄を追加",cusErr:"銘柄名と現在の価格を入力してください",cusNote:"※チャートと予想はサンプル（シミュレーション）です",uJPYopt:"円建て（¥）",uUSDopt:"ドル建て（$）",uPtOpt:"ポイント（指数）",ccySaved:"表示通貨を変更しました",useQ:"「{q}」を入力して追加",useQHint:"下のフォームに入れました。現在の価格を入力して追加してください"},
+addSearch:"銘柄名・コードで検索",noMatch:"一致する銘柄がありません。下で入力して追加できます",cusTitle:"リストにない銘柄を入力して追加",cusName:"銘柄名",cusCode:"コード（任意）",cusPrice:"現在の価格",cusCur:"単位",cusBtn:"入力した銘柄を追加",cusErr:"銘柄名と現在の価格を入力してください",cusNote:"※チャートと予想はサンプル（シミュレーション）です",uJPYopt:"円建て（¥）",uUSDopt:"ドル建て（$）",uPtOpt:"ポイント（指数）",ccySaved:"表示通貨を変更しました",useQ:"「{q}」を入力して追加",useQHint:"下のフォームに入れました。現在の価格を入力して追加してください",rm:"外す",rmAria:"{n}を一覧から外す",removed:"{n}を一覧から外しました"},
 en:{title:"Market Pulse",appName:"Market Pulse",tagline:"Moves and today's outlook at a glance",settings:"Settings",langAria:"Language switch",
 baseLabel:"Default period (applies to all; you can also change each one)",pickLabel:"Instruments to show (pick several)",colorLabel:"Up / down colors",colorJp:"Up = red / Down = blue",colorGl:"Up = green / Down = red",
 tfs_5m:"5m",tfs_15m:"15m",tfs_1h:"1h",tfs_4h:"4h",tfs_1d:"1d",
@@ -280,7 +282,7 @@ rowAria:"{n}: {c}, today's outlook is {f}",fcUp:"up",fcDown:"down",
 help:"How to use",guideTitle:"📖 How to use (3 steps)",g1:"Each row: left = name, middle = chart, right = change and today's outlook (↑ rise / ↓ fall).",g2:"Use the buttons under each row (5m to 1d) to change the chart and change-rate period for that instrument. Tap a row to open today's expected range and news.",g3:"Use \"+ Add instrument\" below the list or \"Settings\" at the top right to change instruments, the default period and colors.",guideTry:"👉 Open an instrument",guideClose:"Close",addIns:"Add instrument",addHint:"Tap an instrument to add it to your list",addTitle:"Add instrument",done:"Done",allAdded:"All instruments are already added",added:"Added {n}",basis:"How it's decided: bullish vs. bearish news in the last 24h, recent price momentum, and Elliott wave analysts' views (a sample calculation)",waveTitle:"🌊 Elliott wave analysts",waveNow:"Now: wave {w} in progress (bullish {a} / bearish {b})",wBull:"Wave {w} under way. Looking to test highs",wBear:"Late in wave {w}. Watch for a pullback",waveNote:"* Sample. Only forecasts made today are used, and targets far from the current price are excluded. These views are included in the ↑↓ outlook",anAt:"Forecast today at {t} ({h})",anTgt:"Target {p} ({c})",anTgtShort:"Target",anCap:"{n}'s path from the forecast time ({t}, dotted vertical line) to the target. Tap a name to switch",asOf:"As of {d} {t}",autoUpd:"Updated to the latest outlook",pxLabel:"Enter current prices (all instruments)",pxHint:"In the original unit (yen / dollars / points), type today's real price and the charts and expected range are rebuilt around it. Empty = sample price.",pxReset:"Reset to sample prices",pxSaved:"Price applied",pxReseted:"Reset to sample prices",pxNow:"Enter the current price (press Enter)",pxReal:"Price you entered",pxSamp:"Sample price (differs from the real one)",
 ccyLabel:"Display currency (stocks, gold, oil, BTC; indexes stay in points)",ccyOrig:"Original",ccyJPY:"Yen (¥)",ccyUSD:"Dollar ($)",
 uPt:"Unit: points (an index, not yen or dollars)",uFx:"Unit: exchange rate",uJPY:"yen",uUSD:"US dollars",uNat:"Shown in {c}",uConv:"Originally in {o}; converted to {c} at ¥{r} per $1",
-addSearch:"Search by name or code",noMatch:"No match. You can type one in below.",cusTitle:"Not in the list? Type it in",cusName:"Name",cusCode:"Code (optional)",cusPrice:"Current price",cusCur:"Unit",cusBtn:"Add this instrument",cusErr:"Enter a name and the current price",cusNote:"* Charts and outlook are simulated samples",uJPYopt:"Yen (¥)",uUSDopt:"US dollars ($)",uPtOpt:"Points (index)",ccySaved:"Display currency changed",useQ:"Add \"{q}\" by typing it in",useQHint:"Filled in the form below. Enter the current price and add it."}
+addSearch:"Search by name or code",noMatch:"No match. You can type one in below.",cusTitle:"Not in the list? Type it in",cusName:"Name",cusCode:"Code (optional)",cusPrice:"Current price",cusCur:"Unit",cusBtn:"Add this instrument",cusErr:"Enter a name and the current price",cusNote:"* Charts and outlook are simulated samples",uJPYopt:"Yen (¥)",uUSDopt:"US dollars ($)",uPtOpt:"Points (index)",ccySaved:"Display currency changed",useQ:"Add \"{q}\" by typing it in",useQHint:"Filled in the form below. Enter the current price and add it.",rm:"Remove",rmAria:"Remove {n} from the list",removed:"Removed {n}"}
 };
 const INS=[
 {id:"n225",cat:"jp",base:50000,dec:0,pre:"",vol:1.2,code:"N225",n:{ja:"日経平均",en:"Nikkei 225"}},
@@ -396,9 +398,9 @@ function ensureCur(){
  if(S.cur&&!S.sel.includes(S.cur))S.cur=null;
  if(!S.cur&&isDesk())S.cur=S.sel[0];
 }
-function tfBar(id,tf,pre){
+function tfBar(id,tf,pre,rm){
  const nm=INS.find(i=>i.id===id).n[lang];
- return `<div class="tfs" role="group" aria-label="${t("tfAria",{n:nm})}">`+TFS.map(x=>`<button class="tfb" data-id="${id}" data-tf="${x}" data-demo="${pre}-${id}-${x}" aria-pressed="${x===tf}" aria-label="${t("tfl_"+x)}">${t("tfs_"+x)}</button>`).join("")+`</div>`;
+ return `<div class="tfs" role="group" aria-label="${t("tfAria",{n:nm})}">`+TFS.map(x=>`<button class="tfb" data-id="${id}" data-tf="${x}" data-demo="${pre}-${id}-${x}" aria-pressed="${x===tf}" aria-label="${t("tfl_"+x)}">${t("tfs_"+x)}</button>`).join("")+(rm?`<button class="tfb rmb" data-rm="${id}" data-demo="remove-${id}" aria-label="${t("rmAria",{n:nm})}">✕ ${t("rm")}</button>`:"")+`</div>`;
 }
 function renderList(){
  let items=S.sel.map(id=>({id,...calc(id)}));
@@ -409,7 +411,7 @@ function renderList(){
   return `<div class="item ${S.cur===o.id?"sel":""}"><button class="row" data-id="${o.id}" data-demo="stock-${o.id}" aria-label="${al}">
   <div><div class="nm">${ins.n[lang]}<span class="cd">${ins.code}</span></div><div class="pr">${fmt(o.m.price,ins)}</div></div>
   <div class="${c}">${chart(o.w,100,40,false)}</div>
-  <div class="rc"><span class="chg ${c==="up"?"u":"d"}">${pct(o.chg)}</span><span class="fc ${f}"><i>${o.m.up?"↑":"↓"}</i>${o.m.prob}%</span></div><span class="chev" aria-hidden="true">›</span></button>${tfBar(o.id,o.tf,"tf")}</div>`}).join("");
+  <div class="rc"><span class="chg ${c==="up"?"u":"d"}">${pct(o.chg)}</span><span class="fc ${f}"><i>${o.m.up?"↑":"↓"}</i>${o.m.prob}%</span></div><span class="chev" aria-hidden="true">›</span></button>${tfBar(o.id,o.tf,"tf",true)}</div>`}).join("");
  const nu=items.filter(o=>o.chg>=0).length,fu=items.filter(o=>o.m.up).length;
  $("#sumMove").innerHTML=`<span class="u">${t("upN",{n:nu})}</span><span class="d">${t("downN",{n:items.length-nu})}</span>`;
  $("#sumFc").innerHTML=`<span class="u">${t("upN",{n:fu})}</span><span class="d">${t("downN",{n:items.length-fu})}</span>`;
@@ -500,6 +502,14 @@ function setTf(b){
  const nb=document.querySelector(`[data-demo="${demo}"]`);if(nb)nb.focus();
 }
 $("#list").addEventListener("click",e=>{
+ const rb=e.target.closest(".rmb");
+ if(rb){
+  const id=rb.dataset.rm,i=S.sel.indexOf(id);
+  if(S.sel.length<=1){toast(t("minOne"));return}
+  const nm=INS.find(x=>x.id===id).n[lang];
+  if(i>=0)S.sel.splice(i,1);
+  if(S.cur===id)S.cur=null;
+  saveS();render();toast(t("removed",{n:nm}));return}
  const tb=e.target.closest(".tfb");if(tb){setTf(tb);return}
  const b=e.target.closest(".row");if(b)openDetail(b.dataset.id)
 });
